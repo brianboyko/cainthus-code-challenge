@@ -1,9 +1,5 @@
 import * as superagent from "superagent";
-
-interface IApiValues {
-  url: string;
-  key: string;
-}
+import { IApiValues, IFlickrResponse } from "../types";
 
 const defaultApiValues: IApiValues = {
   url: process.env.REACT_APP_FLICKR_API_URL as string,
@@ -20,44 +16,50 @@ class Api {
     this.url = url;
     this.key = key;
   }
-  public getPhotosBySearch = (searchTerm: string, pageNumber: number = 1) => this.getPhotos('text', searchTerm, pageNumber)
-  public getPhotosByTags = (searchTerm: string, pageNumber: number = 1) => this.getPhotos('tags', searchTerm, pageNumber)
 
-  private async getPhotos(
-    searchType: string,
+  public getPhotos(
     searchTerm: string,
-    pageNumber: number,
-  ): Promise<any> {
+    searchType: string,
+    pageNumber: number = 1
+  ): Promise<IFlickrResponse> {
     const { ajax, url, key } = this;
-
+    const PER_PAGE = 20;
     const query: any = {
       method: "flickr.photos.search",
       api_key: key,
-      per_page: 20,
+      per_page: PER_PAGE,
       page: pageNumber,
       format: "json",
       nojsoncallback: 1,
-      [searchType]: searchTerm,
+      [searchType]: searchTerm
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
       ajax
         .get(url)
         .query(query)
         .then((jsonResponse: superagent.Response) => {
+          const { page, perpage, pages, photo } = jsonResponse.body.photos;
+          console.log(jsonResponse.body)
           resolve({
             searchType,
             searchTerm,
-            pageNumber,
-            data: jsonResponse.body,
-            getNextPage: () => this.getPhotos(searchType, searchTerm, pageNumber + 1)
-          });
+            pageNumber: page,
+            perPage: perpage,
+            pages,
+            photo,
+            stat: jsonResponse.body.stat,
+            getNextPage: () =>
+              page < pages
+                ? this.getPhotos(searchTerm, searchType, pageNumber + 1)
+                : () => Promise.resolve(null)
+          } as IFlickrResponse);
         })
         .catch((err: any) => {
           console.warn("Error in Api.getPhotos():", err);
           reject(err);
-        });
-    });
+        })
+    );
   }
 }
 
