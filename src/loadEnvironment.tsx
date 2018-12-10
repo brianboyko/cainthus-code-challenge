@@ -1,6 +1,6 @@
-// tslint:disable-next-line:no-var-requires
 const loadEnvironment = () => {
-  require('dotenv').config();
-}
+  // tslint:disable-next-line:no-var-requires
+  require("dotenv").config();
+};
 
 export default loadEnvironment;

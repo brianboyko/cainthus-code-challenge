@@ -20,30 +20,37 @@ class Api {
     this.url = url;
     this.key = key;
   }
-  public async getPhotos(
+  public getPhotosBySearch = (searchTerm: string, pageNumber: number = 1) => this.getPhotos('text', searchTerm, pageNumber)
+  public getPhotosByTags = (searchTerm: string, pageNumber: number = 1) => this.getPhotos('tags', searchTerm, pageNumber)
+
+  private async getPhotos(
+    searchType: string,
     searchTerm: string,
-    pageNumber: number = 1
+    pageNumber: number,
   ): Promise<any> {
     const { ajax, url, key } = this;
+
+    const query: any = {
+      method: "flickr.photos.search",
+      api_key: key,
+      per_page: 20,
+      page: pageNumber,
+      format: "json",
+      nojsoncallback: 1,
+      [searchType]: searchTerm,
+    };
 
     return new Promise((resolve, reject) => {
       ajax
         .get(url)
-        .query({
-          method: "flickr.photos.search",
-          api_key: key,
-          text: searchTerm,
-          per_page: 20,
-          page: pageNumber,
-          format: "json",
-          nojsoncallback: 1
-        })
+        .query(query)
         .then((jsonResponse: superagent.Response) => {
           resolve({
+            searchType,
             searchTerm,
             pageNumber,
             data: jsonResponse.body,
-            getNextPage: () => this.getPhotos(searchTerm, pageNumber + 1)
+            getNextPage: () => this.getPhotos(searchType, searchTerm, pageNumber + 1)
           });
         })
         .catch((err: any) => {
