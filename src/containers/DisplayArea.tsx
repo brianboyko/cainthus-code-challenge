@@ -1,3 +1,5 @@
-const place = () => <div/>
+import * as React from "react";
 
-export default place
+const placeholder = () => <div>foo</div>;
+
+export default placeholder;

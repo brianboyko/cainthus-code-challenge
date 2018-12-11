@@ -1,5 +1,5 @@
 import * as superagent from "superagent";
-import { IApiValues, IFlickrResponse } from "../types";
+import { IApiValues, IFlickrPack } from "../types";
 
 const defaultApiValues: IApiValues = {
   url: process.env.REACT_APP_FLICKR_API_URL as string,
@@ -17,24 +17,23 @@ class Api {
     this.key = key;
   }
 
-  public getPhotos(
+  public getPhotos = (
     searchTerm: string,
     searchType: string,
     pageNumber: number = 1
-  ): Promise<IFlickrResponse> {
-    const { ajax, url, key } = this;
-    const PER_PAGE = 20;
-    const query: any = {
-      method: "flickr.photos.search",
-      api_key: key,
-      per_page: PER_PAGE,
-      page: pageNumber,
-      format: "json",
-      nojsoncallback: 1,
-      [searchType]: searchTerm
-    };
-
-    return new Promise((resolve, reject) =>
+  ): Promise<IFlickrPack> =>
+    new Promise((resolve, reject) => {
+      const { ajax, url, key } = this;
+      const PER_PAGE = 20;
+      const query: any = {
+        method: "flickr.photos.search",
+        api_key: key,
+        per_page: PER_PAGE,
+        page: pageNumber,
+        format: "json",
+        nojsoncallback: 1,
+        [searchType]: searchTerm
+      };
       ajax
         .get(url)
         .query(query)
@@ -47,19 +46,14 @@ class Api {
             perPage: perpage,
             pages,
             photo,
-            stat: jsonResponse.body.stat,
-            getNextPage: () =>
-              page < pages
-                ? this.getPhotos(searchTerm, searchType, pageNumber + 1)
-                : () => Promise.resolve(null)
-          } as IFlickrResponse);
+            stat: jsonResponse.body.stat
+          });
         })
-        .catch((err: any) => {
-          console.error("Error in Api.getPhotos():", err);
+        .catch(err => {
+          console.error("Error in Api.getPhotos: ", err);
           reject(err);
-        })
-    );
-  }
+        });
+    });
 }
 
 export default Api;

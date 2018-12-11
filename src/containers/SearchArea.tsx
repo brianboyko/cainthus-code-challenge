@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { getInitialPhotos } from "../store/actions/photos";
+import { getPhotos } from "../store/actions/photos";
 import Header from "../components/Header";
 
 interface ISearchAreaState {
@@ -26,18 +26,15 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
       />
     );
   }
-  private handleChangeSearchType = (event: any): void => {
+  private handleChangeSearchType = (event: any) => {
     this.setState({ searchType: event.target.value });
   };
-  private handleQueryChange = (event: any): void => {
+  private handleQueryChange = (event: any) => {
     this.setState({ searchTerm: event.target.value });
   };
-  private handleGetPhotos = (): void => {
-    this.props.actions.getInitialPhotos(
-      this.state.searchTerm,
-      this.state.searchType
-    );
-    this.setState({ searchTerm: "" });
+
+  private handleGetPhotos = async () => {
+    this.props.actions.getInitialPhotos(this.state); 
   };
 }
 
@@ -45,7 +42,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   actions: {
     getInitialPhotos: bindActionCreators(
       (searchTerm: string, searchType: string) =>
-        getInitialPhotos(searchTerm, searchType),
+        getPhotos(searchTerm, searchType),
       dispatch
     )
   }

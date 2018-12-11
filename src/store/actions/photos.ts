@@ -1,7 +1,6 @@
 import actionTypes from "../reduxTypes";
 import Api from "../../ajax/api";
-import { IFlickrResponse, IFlickrPack } from "../../types";
-import { omit } from "lodash";
+import {  IFlickrPack } from "../../types";
 import { Dispatch } from "redux";
 
 const api = new Api();
@@ -33,23 +32,23 @@ export const loadPhotosIntoStore = (photoPack: IFlickrPack) => ({
   payload: photoPack
 });
 
-export const getNextPhotos = (apiCall: () => Promise<IFlickrResponse>) => (
-  dispatch: Dispatch
+export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
+  dispatch: Dispatch,
+  getState: any
 ) => {
   dispatch(setLoading(true));
-  return apiCall().then((flickrResponse: IFlickrResponse) => {
-    const photoPack = omit(flickrResponse, "getNextPage");
-    dispatch(loadPhotosIntoStore(photoPack));
-    return flickrResponse.getNextPage;
-  });
+  const state = getState();
+  const isAtEnd: boolean = state.pages === state.pageNumber;
+  if (isAtEnd) {
+    return null;
+  }
+  const nextPageNumber: number =
+    searchTerm !== state.searchTerm || searchType !== state.searchType
+      ? 1
+      : state.pageNumber + 1;
+  return api
+    .getPhotos(searchTerm, searchType, nextPageNumber)
+    .then((photoPack: IFlickrPack) => {
+      return dispatch(loadPhotosIntoStore(photoPack));
+    });
 };
-
-export const getInitialPhotos = (
-  searchTerm: string,
-  searchType: string = "tags"
-) => getNextPhotos(() => api.getPhotos(searchTerm, searchType, 1));
-
-export const queueNextCall = (apiCall: () => Promise<IFlickrResponse>) =>  ({
-  type: actionTypes.photos.QUEUE_NEXT,
-  payload: apiCall
-})

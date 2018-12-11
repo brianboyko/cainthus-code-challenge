@@ -11,7 +11,6 @@ describe("./src/ajax/api.ts", () => {
       expect(puppies.searchType).toBe("tags");
       expect(puppies.pageNumber).toBe(1);
       expect(puppies.stat).toBe("ok");
-      expect(puppies.getNextPage).toBeDefined();
     });
     it("can chain searches", async () => {
       const kitties = await api.getPhotos("kitties", "text");
@@ -20,21 +19,6 @@ describe("./src/ajax/api.ts", () => {
       expect(kitties.searchType).toBe("text");
       expect(kitties.pageNumber).toBe(1);
       expect(kitties.stat).toBe("ok");
-      const kitties2 = await kitties.getNextPage();
-      expect(kitties2).not.toBeNull();
-      expect(kitties2!.searchTerm).toBe("kitties");
-      expect(kitties2!.searchType).toBe("text");
-      expect(kitties2!.pageNumber).toBe(2);
-      expect(kitties2!.stat).toBe("ok");
-      expect(kitties2).not.toEqual(kitties);
-      const kitties3 = await kitties2!.getNextPage();
-      expect(kitties3).not.toBeNull();
-      expect(kitties3!.pageNumber).toBe(3);
-      expect(kitties3!.searchTerm).toBe("kitties");
-      expect(kitties3!.searchType).toBe("text");
-      expect(kitties3!.stat).toBe("ok");
-      expect(kitties3).not.toEqual(kitties);
-      expect(kitties3).not.toEqual(kitties2);
     });
   });
 });
