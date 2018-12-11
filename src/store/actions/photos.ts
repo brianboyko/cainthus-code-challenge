@@ -22,14 +22,17 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
   new Promise((resolve, reject) => {
     dispatch(setLoading(true));
     const state = getState();
-    const isAtEnd: boolean = state.pages === state.pageNumber;
+    const {photos} = state;
+    const isAtEnd: boolean = photos.pages === photos.pageNumber;
     if (isAtEnd) {
       resolve();
     }
+
     const nextPageNumber: number =
-      searchTerm !== state.searchTerm || searchType !== state.searchType
+      searchTerm !== photos.searchTerm || searchType !== photos.searchType
         ? 1
-        : state.pageNumber + 1;
+        : photos.pageNumber + 1;
+
     return api
       .getPhotos(searchTerm, searchType, nextPageNumber)
       .then((photoPack: IFlickrPack) => {

@@ -15,17 +15,17 @@ const initialPhotosState: any = {
 
 describe("./src/store/actions/photos.ts", () => {
   describe("setLoading", () => {
-    it('changes the loading setting', () => {
+    it("changes the loading setting", () => {
       expect(photoActions.setLoading(true)).toEqual({
         type: actionTypes.photos.SET_LOADING,
         payload: true
-      })
+      });
       expect(photoActions.setLoading(false)).toEqual({
         type: actionTypes.photos.SET_LOADING,
         payload: false
-      })
-    })
-  })
+      });
+    });
+  });
   describe("loadPhotosIntoStore", () => {
     it("loads a flickrPack as the payload", () => {
       expect(photoActions.loadPhotosIntoStore(fakeFlickrPack)).toEqual({
@@ -36,13 +36,13 @@ describe("./src/store/actions/photos.ts", () => {
   });
   describe("getPhotos", () => {
     it("gets photos", async () => {
-      await photoActions.getPhotos("whatever", "tags")(
-        fakeDispatch, () => initialPhotosState
-      );
+      await photoActions.getPhotos("whatever", "tags")(fakeDispatch, () => ({
+        photos: initialPhotosState
+      }));
       expect(fakeDispatch.mock.calls[0][0]).toEqual({
         type: actionTypes.photos.SET_LOADING,
         payload: true
-      })
+      });
       expect(fakeDispatch.mock.calls[1][0]).toEqual({
         type: actionTypes.photos.LOAD_PHOTOS,
         payload: { ...fakeFlickrPack }

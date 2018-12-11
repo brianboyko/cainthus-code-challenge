@@ -5,7 +5,7 @@ import "./header.sass";
 
 class Header extends React.Component<any> {
   public render() {
-    const { handleQueryChange, handleGetPhotos } = this.props;
+    const { handleQueryChange, handleGetPhotos, searchTerm } = this.props;
     const { handleKeyPress } = this;
 
     return (
@@ -18,6 +18,7 @@ class Header extends React.Component<any> {
           <input
             onChange={handleQueryChange}
             onKeyPress={handleKeyPress}
+            value={searchTerm}
             className="header__search-form__input"
           />
           <button
