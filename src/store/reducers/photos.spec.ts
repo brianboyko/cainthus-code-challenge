@@ -18,8 +18,7 @@ const fakePhoto2 = {
   ...fakePhoto,
   id: "whatever"
 };
-
-const fakeFlickrPack = {
+export const fakeFlickrPack = {
   searchType: "tags",
   searchTerm: "puppies",
   pageNumber: 1,

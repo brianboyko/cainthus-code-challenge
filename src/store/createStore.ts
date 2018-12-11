@@ -1,8 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
-// import * as carousel from "./reducers/carousel";
-// import * as photos from "./reducers/photos";
+import * as photos from "./reducers/photos";
 
 const environment: string | undefined = process.env.NODE_ENV;
 
@@ -13,10 +12,11 @@ if (environment === "development") {
 
 const enhancer = compose(applyMiddleware(...middlewares));
 const appReducer = combineReducers({ 
-  // ...carousel, 
-  // ...photos
+  ...photos
  });
 const rootReducer = (state: any = {}, action: any = {}) => {
+  // this spot would be ideal for any debug code that
+  // needs to intercept state or actions
   return appReducer(state, action);
 };
 
