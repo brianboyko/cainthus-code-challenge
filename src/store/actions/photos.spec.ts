@@ -4,6 +4,15 @@ import { fakeFlickrPack } from "../../ajax/__mocks__/api";
 jest.mock("../../ajax/api");
 const fakeDispatch = jest.fn(() => null);
 
+const initialPhotosState: any = {
+  searchType: "tags",
+  searchTerm: null,
+  photo: [],
+  pageNumber: null,
+  perPage: 20,
+  pages: null
+};
+
 describe("./src/store/actions/photos.ts", () => {
   describe("setLoading", () => {
     it('changes the loading setting', () => {
@@ -25,10 +34,10 @@ describe("./src/store/actions/photos.ts", () => {
       });
     });
   });
-  describe("getInitialPhotos/getNextPhotos", () => {
-    it("getsInitialPhotos and returns a Promise to pass to getNextPhotos", async () => {
-      const first = await photoActions.getInitialPhotos("whatever", "tags")(
-        fakeDispatch
+  describe("getPhotos", () => {
+    it("gets photos", async () => {
+      await photoActions.getPhotos("whatever", "tags")(
+        fakeDispatch, () => initialPhotosState
       );
       expect(fakeDispatch.mock.calls[0][0]).toEqual({
         type: actionTypes.photos.SET_LOADING,
@@ -37,28 +46,6 @@ describe("./src/store/actions/photos.ts", () => {
       expect(fakeDispatch.mock.calls[1][0]).toEqual({
         type: actionTypes.photos.LOAD_PHOTOS,
         payload: { ...fakeFlickrPack }
-      });
-      expect(typeof test).toBe("function");
-    
-      const second = await photoActions.getNextPhotos(first)(fakeDispatch);
-      expect(typeof second).toBe("function");
-      expect(fakeDispatch.mock.calls[2][0]).toEqual({
-        type: actionTypes.photos.SET_LOADING,
-        payload: true
-      })
-      expect(fakeDispatch.mock.calls[3][0]).toEqual({
-        type: actionTypes.photos.LOAD_PHOTOS,
-        payload: { ...fakeFlickrPack, pageNumber: 2 }
-      });
-      const third = await photoActions.getNextPhotos(second)(fakeDispatch);
-      expect(typeof third).toBe("function");
-      expect(fakeDispatch.mock.calls[4][0]).toEqual({
-        type: actionTypes.photos.SET_LOADING,
-        payload: true
-      })
-      expect(fakeDispatch.mock.calls[5][0]).toEqual({
-        type: actionTypes.photos.LOAD_PHOTOS,
-        payload: { ...fakeFlickrPack, pageNumber: 3 }
       });
     });
   });

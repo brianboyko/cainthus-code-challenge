@@ -21,23 +21,11 @@ export const fakeFlickrPack = {
 };
 
 class Api {
-  public spies: any[] = [];
   public getPhotos = (
     searchTerm: string,
     searchType: string,
-    pageNumber: number = 1
   ) => {
-    const mockGetNextPage = jest.fn(() =>
-      this.getPhotos(searchTerm, searchType, pageNumber + 1)
-    );
-    this.spies.push(mockGetNextPage);
-    return new Promise(resolve => {
-      resolve({
-        ...fakeFlickrPack,
-        pageNumber,
-        getNextPage: mockGetNextPage
-      });
-    });
+    return Promise.resolve(fakeFlickrPack);
   };
 }
 
