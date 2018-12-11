@@ -1,6 +1,6 @@
 import * as photoActions from "../actions/photos";
 jest.mock("../../ajax/api");
-import { photos, currentDisplay } from "./photos";
+import { photos, loading } from "./photos";
 
 const fakePhoto = {
   id: "45541511224",
@@ -33,38 +33,36 @@ describe("./src/store/reducers/photos.ts", () => {
     it("stores photo data", () => {
       const base = photos();
       expect(base).toEqual({
-        byTags: {},
-        byText: {}
+        searchType: "tags",
+        searchTerm: null,
+        photo: [],
+        pageNumber: null,
+        perPage: 20,
+        pages: null
       });
       const first = photos(
         base,
-        photoActions.loadPhotosIntoStore({ ...fakeFlickrPack })
+        photoActions.loadPhotosIntoStore(fakeFlickrPack)
       );
       expect(first).toEqual({
-        byTags: {
-          puppies: {
-            lastPageRetrieved: 1,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2]
-          }
-        },
-        byText: {}
+        searchType: "tags",
+        searchTerm: "puppies",
+        photo: [fakePhoto, fakePhoto2],
+        pageNumber: 1,
+        perPage: 20,
+        pages: 9127
       });
       const second = photos(
         first,
         photoActions.loadPhotosIntoStore({ ...fakeFlickrPack, pageNumber: 2 })
       );
       expect(second).toEqual({
-        byTags: {
-          puppies: {
-            lastPageRetrieved: 2,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2]
-          }
-        },
-        byText: {}
+        searchType: "tags",
+        searchTerm: "puppies",
+        photo: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2],
+        pageNumber: 1,
+        perPage: 20,
+        pages: 9127
       });
       const third = photos(
         second,
@@ -75,21 +73,12 @@ describe("./src/store/reducers/photos.ts", () => {
         })
       );
       expect(third).toEqual({
-        byTags: {
-          puppies: {
-            lastPageRetrieved: 2,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2]
-          },
-          kitties: {
-            lastPageRetrieved: 1,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2]
-          }
-        },
-        byText: {}
+        searchType: "tags",
+        searchTerm: "kitties",
+        photo: [fakePhoto, fakePhoto2],
+        pageNumber: 1,
+        perPage: 20,
+        pages: 9127
       });
       const fourth = photos(
         third,
@@ -100,80 +89,35 @@ describe("./src/store/reducers/photos.ts", () => {
           searchTerm: "cute goats"
         })
       );
-      expect(third).toEqual({
-        byTags: {
-          puppies: {
-            lastPageRetrieved: 2,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2]
-          },
-          kitties: {
-            lastPageRetrieved: 1,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2]
-          }
-        },
-        byText: {}
-      });
       expect(fourth).toEqual({
-        byTags: {
-          puppies: {
-            lastPageRetrieved: 2,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2]
-          },
-          kitties: {
-            lastPageRetrieved: 1,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2]
-          }
-        },
-        byText: {
-          "cute goats": {
-            lastPageRetrieved: 1,
-            perPage: 20,
-            pages: 9127,
-            photos: [fakePhoto, fakePhoto2]
-          }
-        }
+        searchType: "text",
+        searchTerm: "cute goats",
+        photo: [fakePhoto, fakePhoto2],
+        pageNumber: 1,
+        perPage: 20,
+        pages: 9127
       });
     });
   });
-  describe("currentDisplay()", () => {
+  describe("loading()", () => {
     it("stores the current search term", () => {
-      const base = currentDisplay();
-      expect(base).toEqual({
-        loading: false,
-        searchType: "tags",
-        searchTerm: null
-      });
-      const loading = currentDisplay(base, photoActions.setLoading(true));
-      expect(loading).toEqual({
-        loading: true,
-        searchType: "tags",
-        searchTerm: null
-      });
+      const base = loading();
+      expect(base).toBe(false);
+      const first = loading(base, photoActions.setLoading(true));
+      expect(first).toBe(true);
 
-      expect(currentDisplay(loading, photoActions.setLoading(false))).toEqual({
-        loading: false,
-        searchType: "tags",
-        searchTerm: null
-      });
+      expect(loading(first, photoActions.setLoading(false))).toBe(false);
 
       expect(
-        currentDisplay(
-          loading,
+        loading(
+          first,
           photoActions.loadPhotosIntoStore({
             ...fakeFlickrPack,
             searchType: "text",
             searchTerm: "baby chicks"
           })
         )
-      ).toEqual({loading: false, searchType: "text", searchTerm: "baby chicks"})
+      ).toBe(false);
     });
   });
 });

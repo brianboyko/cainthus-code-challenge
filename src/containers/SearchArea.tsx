@@ -51,7 +51,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 });
 
+const mapStateToProps = (state: any) => ({
+  storedTagSearches: Object.keys(state.photos.byTags),
+  storedTextSearches: Object.keys(state.photos.byText)
+})
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SearchArea);

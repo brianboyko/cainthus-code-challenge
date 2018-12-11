@@ -1,30 +1,13 @@
-import { IFlickrPhoto, IReduxAction } from "../../types";
+import { IReduxAction, IPhotosState } from "../../types";
 import actionTypes from "../reduxTypes";
 
-interface IStoredResult {
-  lastPageRetrieved: number;
-  perPage: 20;
-  pages: 9127;
-  photos: IFlickrPhoto[];
-}
-
-interface IPhotosState {
-  byTags: { [key: string]: IStoredResult };
-  byText: { [key: string]: IStoredResult };
-}
-
-interface ICurrentDisplayState {
-  loading: boolean;
-  searchType: string;
-  searchTerm: string | null;
-}
-
-const initialPhotosState: IPhotosState = { byTags: {}, byText: {} };
-
-const initialCurrentDisplayState: ICurrentDisplayState = {
-  loading: false,
+const initialPhotosState: IPhotosState = {
   searchType: "tags",
-  searchTerm: null
+  searchTerm: null,
+  photo: [],
+  pageNumber: null,
+  perPage: 20,
+  pages: null
 };
 
 /* This code doesn't scan well, but check photos.spec.js for 
@@ -43,31 +26,19 @@ export const photos = (
         pages,
         photo
       } = action.payload;
-      const by: string = searchType === "tags" ? "byTags" : "byText";
-      if (!state[by][searchTerm]) {
+      if (pageNumber === 1) {
         return {
-          ...state,
-          [by]: {
-            ...state[by],
-            [searchTerm]: {
-              lastPageRetrieved: pageNumber,
-              perPage,
-              pages,
-              photos: photo
-            }
-          }
+          searchType,
+          searchTerm,
+          pageNumber,
+          perPage,
+          pages,
+          photo
         };
       }
       return {
         ...state,
-        [by]: {
-          ...state[by],
-          [searchTerm]: {
-            ...state[by][searchTerm],
-            lastPageRetrieved: pageNumber,
-            photos: state[by][searchTerm].photos.concat(photo)
-          }
-        }
+        photo: state.photo.concat(photo)
       };
 
     default:
@@ -75,19 +46,15 @@ export const photos = (
   }
 };
 
-export const currentDisplay = (
-  state: ICurrentDisplayState = initialCurrentDisplayState,
+export const loading = (
+  state: boolean = false,
   action: IReduxAction = { type: "" }
 ) => {
   switch (action.type) {
     case actionTypes.photos.SET_LOADING:
-      return { ...state, loading: action.payload };
+      return action.payload;
     case actionTypes.photos.LOAD_PHOTOS:
-      return {
-        loading: false,
-        searchTerm: action.payload.searchTerm,
-        searchType: action.payload.searchType
-      };
+      return false;
     default:
       return state;
   }

@@ -33,3 +33,12 @@ export interface IReduxAction {
   type: string;
   payload?: any;
 }
+
+export interface IPhotosState {
+  searchType: string;
+  searchTerm: string | null;
+  photo: IFlickrPhoto[];
+  pageNumber: number | null;
+  perPage: number;
+  pages: number | null;
+}
