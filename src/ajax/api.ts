@@ -34,10 +34,12 @@ class Api {
         nojsoncallback: 1,
         [searchType]: searchTerm
       };
+      console.log(query);
       ajax
         .get(url)
         .query(query)
         .then((jsonResponse: superagent.Response) => {
+          console.log(jsonResponse);
           const { page, perpage, pages, photo } = jsonResponse.body.photos;
           resolve({
             searchType,
