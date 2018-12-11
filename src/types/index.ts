@@ -26,5 +26,5 @@ export interface IFlickrPack {
 }
 
 export interface IFlickrResponse extends IFlickrPack {
-  getNextPage: () => Promise<IFlickrResponse> | Promise<null>;
+  getNextPage: () => Promise<IFlickrResponse>;
 }

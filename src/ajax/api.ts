@@ -40,7 +40,6 @@ class Api {
         .query(query)
         .then((jsonResponse: superagent.Response) => {
           const { page, perpage, pages, photo } = jsonResponse.body.photos;
-          console.log(jsonResponse.body)
           resolve({
             searchType,
             searchTerm,
@@ -56,7 +55,7 @@ class Api {
           } as IFlickrResponse);
         })
         .catch((err: any) => {
-          console.warn("Error in Api.getPhotos():", err);
+          console.error("Error in Api.getPhotos():", err);
           reject(err);
         })
     );

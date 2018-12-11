@@ -41,4 +41,4 @@ export const getNextPhotos = (apiCall: () => Promise<IFlickrResponse>) => (
 export const getInitialPhotos = (
   searchTerm: string,
   searchType: string = "tags"
-) => getNextPhotos(() => api.getPhotos(searchTerm, searchType));
+) => getNextPhotos(() => api.getPhotos(searchTerm, searchType, 1));

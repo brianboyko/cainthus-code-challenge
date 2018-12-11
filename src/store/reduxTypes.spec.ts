@@ -1,4 +1,4 @@
-import actionTypes, { createActionTypes } from "./reduxTypes";
+import { createActionTypes } from "./reduxTypes";
 
 describe("createActionTypes", () => {
   it("creates namespaced actionTypes", () => {
