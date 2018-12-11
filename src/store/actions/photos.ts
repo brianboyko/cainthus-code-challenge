@@ -48,3 +48,8 @@ export const getInitialPhotos = (
   searchTerm: string,
   searchType: string = "tags"
 ) => getNextPhotos(() => api.getPhotos(searchTerm, searchType, 1));
+
+export const queueNextCall = (apiCall: () => Promise<IFlickrResponse>) =>  ({
+  type: actionTypes.photos.QUEUE_NEXT,
+  payload: apiCall
+})
