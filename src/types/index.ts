@@ -28,3 +28,8 @@ export interface IFlickrPack {
 export interface IFlickrResponse extends IFlickrPack {
   getNextPage: () => Promise<IFlickrResponse>;
 }
+
+export interface IReduxAction {
+  type: string;
+  payload?: any;
+}

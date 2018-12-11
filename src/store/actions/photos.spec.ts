@@ -2,7 +2,7 @@ import * as photoActions from "./photos";
 import actionTypes from "../reduxTypes";
 import { fakeFlickrPack } from "../../ajax/__mocks__/api";
 jest.mock("../../ajax/api");
-const fakeDispatch = jest.fn(() => {});
+const fakeDispatch = jest.fn(() => null);
 
 describe("./src/store/actions/photos.ts", () => {
   describe("loadPhotosIntoStore", () => {
