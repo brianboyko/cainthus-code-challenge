@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { getInitialPhotos } from "../store/actions/photos";
-import SearchQuery from '../components/SearchQuery';
+import Header from "../components/Header";
 
 interface ISearchAreaState {
   searchTerm: string;
@@ -17,7 +17,7 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
     const { handleQueryChange, handleGetPhotos, handleChangeSearchType } = this;
     const { searchTerm, searchType } = this.state;
     return (
-      <SearchQuery
+      <Header
         handleQueryChange={handleQueryChange}
         handleGetPhotos={handleGetPhotos}
         handleChangeSearchType={handleChangeSearchType}
@@ -51,12 +51,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 });
 
-const mapStateToProps = (state: any) => ({
-  storedTagSearches: Object.keys(state.photos.byTags),
-  storedTextSearches: Object.keys(state.photos.byText)
-})
-
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(SearchArea);

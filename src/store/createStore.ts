@@ -11,9 +11,9 @@ if (environment === "development") {
 }
 
 const enhancer = compose(applyMiddleware(...middlewares));
-const appReducer = combineReducers({ 
+const appReducer = combineReducers({
   ...photos
- });
+});
 const rootReducer = (state: any = {}, action: any = {}) => {
   // this spot would be ideal for any debug code that
   // needs to intercept state or actions
