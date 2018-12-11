@@ -1,0 +1,48 @@
+  
+.app-content
+  color: #211922
+  font-size: 12px
+  text-size-adjust: none
+
+.header
+  position: sticky
+  top: 0
+  width: 100%
+  display: block
+  height: 60px
+  &__search-form
+    min-width: 400px
+    display: flex
+    flex: 1 1 auto
+    flex-direction: row
+    border-radius: 4px
+    width: 100%
+    background-color: #efefef
+    &__input
+      background-color: transparent
+      color: #333
+      font-weight: 700
+      font-size: 16px
+      line-height: 20px
+      padding: 0px 40px 0 52px
+      width: 100%
+      vertical-align: middle
+      cursor: text
+
+.main-container
+  box-sizing: border-box
+  display: block
+  padding: 24px 0px
+  margin: 0px
+
+.grid-container {
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr
+  grid-template-rows: 1fr
+  grid-template-areas: "col0 col1 col2 col3 col4"
+}
+
+.grid-container__column
+  display: flex
+  flex-direction: column
+}

@@ -1,6 +1,6 @@
 import * as photoActions from "../actions/photos";
 jest.mock("../../ajax/api");
-import { photos } from "./photos";
+import { photos, currentDisplay } from "./photos";
 
 const fakePhoto = {
   id: "45541511224",
@@ -141,6 +141,39 @@ describe("./src/store/reducers/photos.ts", () => {
           }
         }
       });
+    });
+  });
+  describe("currentDisplay()", () => {
+    it("stores the current search term", () => {
+      const base = currentDisplay();
+      expect(base).toEqual({
+        loading: false,
+        searchType: "tags",
+        searchTerm: null
+      });
+      const loading = currentDisplay(base, photoActions.setLoading(true));
+      expect(loading).toEqual({
+        loading: true,
+        searchType: "tags",
+        searchTerm: null
+      });
+
+      expect(currentDisplay(loading, photoActions.setLoading(false))).toEqual({
+        loading: false,
+        searchType: "tags",
+        searchTerm: null
+      });
+
+      expect(
+        currentDisplay(
+          loading,
+          photoActions.loadPhotosIntoStore({
+            ...fakeFlickrPack,
+            searchType: "text",
+            searchTerm: "baby chicks"
+          })
+        )
+      ).toEqual({loading: false, searchType: "text", searchTerm: "baby chicks"})
     });
   });
 });

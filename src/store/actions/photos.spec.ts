@@ -5,6 +5,18 @@ jest.mock("../../ajax/api");
 const fakeDispatch = jest.fn(() => null);
 
 describe("./src/store/actions/photos.ts", () => {
+  describe("setLoading", () => {
+    it('changes the loading setting', () => {
+      expect(photoActions.setLoading(true)).toEqual({
+        type: actionTypes.photos.SET_LOADING,
+        payload: true
+      })
+      expect(photoActions.setLoading(false)).toEqual({
+        type: actionTypes.photos.SET_LOADING,
+        payload: false
+      })
+    })
+  })
   describe("loadPhotosIntoStore", () => {
     it("loads a flickrPack as the payload", () => {
       expect(photoActions.loadPhotosIntoStore(fakeFlickrPack)).toEqual({
@@ -19,6 +31,10 @@ describe("./src/store/actions/photos.ts", () => {
         fakeDispatch
       );
       expect(fakeDispatch.mock.calls[0][0]).toEqual({
+        type: actionTypes.photos.SET_LOADING,
+        payload: true
+      })
+      expect(fakeDispatch.mock.calls[1][0]).toEqual({
         type: actionTypes.photos.LOAD_PHOTOS,
         payload: { ...fakeFlickrPack }
       });
@@ -26,13 +42,21 @@ describe("./src/store/actions/photos.ts", () => {
     
       const second = await photoActions.getNextPhotos(first)(fakeDispatch);
       expect(typeof second).toBe("function");
-      expect(fakeDispatch.mock.calls[1][0]).toEqual({
+      expect(fakeDispatch.mock.calls[2][0]).toEqual({
+        type: actionTypes.photos.SET_LOADING,
+        payload: true
+      })
+      expect(fakeDispatch.mock.calls[3][0]).toEqual({
         type: actionTypes.photos.LOAD_PHOTOS,
         payload: { ...fakeFlickrPack, pageNumber: 2 }
       });
       const third = await photoActions.getNextPhotos(second)(fakeDispatch);
       expect(typeof third).toBe("function");
-      expect(fakeDispatch.mock.calls[2][0]).toEqual({
+      expect(fakeDispatch.mock.calls[4][0]).toEqual({
+        type: actionTypes.photos.SET_LOADING,
+        payload: true
+      })
+      expect(fakeDispatch.mock.calls[5][0]).toEqual({
         type: actionTypes.photos.LOAD_PHOTOS,
         payload: { ...fakeFlickrPack, pageNumber: 3 }
       });

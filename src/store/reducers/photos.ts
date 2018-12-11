@@ -13,19 +13,37 @@ interface IPhotosState {
   byText: { [key: string]: IStoredResult };
 }
 
-const initialState = { byTags: {}, byText: {} }
+interface ICurrentDisplayState {
+  loading: boolean;
+  searchType: string;
+  searchTerm: string | null;
+}
+
+const initialPhotosState: IPhotosState = { byTags: {}, byText: {} };
+
+const initialCurrentDisplayState: ICurrentDisplayState = {
+  loading: false,
+  searchType: "tags",
+  searchTerm: null
+};
 
 /* This code doesn't scan well, but check photos.spec.js for 
    the use case. */
 export const photos = (
-  state: IPhotosState = initialState,
+  state: IPhotosState = initialPhotosState,
   action: IReduxAction = { type: "" }
 ): IPhotosState => {
   switch (action.type) {
     case actionTypes.photos.LOAD_PHOTOS:
-      const by: string =
-        action.payload.searchType === "tags" ? "byTags" : "byText";
-      const { searchTerm, pageNumber, perPage, pages, photo } = action.payload;
+      const {
+        searchType,
+        searchTerm,
+        pageNumber,
+        perPage,
+        pages,
+        photo
+      } = action.payload;
+      const by: string = searchType === "tags" ? "byTags" : "byText";
       if (!state[by][searchTerm]) {
         return {
           ...state,
@@ -52,6 +70,24 @@ export const photos = (
         }
       };
 
+    default:
+      return state;
+  }
+};
+
+export const currentDisplay = (
+  state: ICurrentDisplayState = initialCurrentDisplayState,
+  action: IReduxAction = { type: "" }
+) => {
+  switch (action.type) {
+    case actionTypes.photos.SET_LOADING:
+      return { ...state, loading: action.payload };
+    case actionTypes.photos.LOAD_PHOTOS:
+      return {
+        loading: false,
+        searchTerm: action.payload.searchTerm,
+        searchType: action.payload.searchType
+      };
     default:
       return state;
   }

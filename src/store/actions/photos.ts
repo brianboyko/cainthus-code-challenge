@@ -20,8 +20,13 @@ const api = new Api();
  *
  * To kick it all off, we have a "getInitialPhotos" method which will put the initial API call
  * into getNextPhotos, starting the chain.
- * 
+ *
  */
+
+export const setLoading = (bool: boolean) => ({
+  type: actionTypes.photos.SET_LOADING,
+  payload: bool
+});
 
 export const loadPhotosIntoStore = (photoPack: IFlickrPack) => ({
   type: actionTypes.photos.LOAD_PHOTOS,
@@ -31,6 +36,7 @@ export const loadPhotosIntoStore = (photoPack: IFlickrPack) => ({
 export const getNextPhotos = (apiCall: () => Promise<IFlickrResponse>) => (
   dispatch: Dispatch
 ) => {
+  dispatch(setLoading(true));
   return apiCall().then((flickrResponse: IFlickrResponse) => {
     const photoPack = omit(flickrResponse, "getNextPage");
     dispatch(loadPhotosIntoStore(photoPack));
