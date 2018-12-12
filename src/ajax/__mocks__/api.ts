@@ -21,12 +21,10 @@ export const fakeFlickrPack = {
 };
 
 class Api {
-  public getPhotos = (
-    searchTerm: string,
-    searchType: string,
-  ) => {
-    return Promise.resolve(fakeFlickrPack);
-  };
+  public getPhotos = (searchTerm: string, searchType: string) =>
+    Promise.resolve(fakeFlickrPack);
+
+  public getAndProcessPhotos = () => Promise.resolve(fakeFlickrPack);
 }
 
 export default Api;
