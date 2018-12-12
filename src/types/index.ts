@@ -13,12 +13,12 @@ export interface IFlickrPhoto {
   ispublic: number;
   isfriend: number;
   isfamily: number;
-  userData?: {
+  user?: {
     username: string;
     realname: string;
     location: string;
   };
-  tagList?: any;
+  info?: any;
 }
 
 export interface IFlickrPack {

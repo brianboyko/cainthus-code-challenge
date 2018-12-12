@@ -17,16 +17,21 @@ class Api {
     this.url = url;
     this.key = key;
   }
-  // needs coverage
-  public getAllUsersForPack = async (photoPack: IFlickrPack) => {
-    const photoData = await Promise.all(
-      photoPack.photo.map(async onePhoto => {
-        const userData = await this.getUser(onePhoto.owner);
-        return { ...onePhoto, userData };
+
+  public processPack = async (photoPack: IFlickrPack) => {
+    const photos: IFlickrPhoto[] = photoPack.photo;
+    const processedPhotos = await Promise.all(
+      photos.map(async (photo: IFlickrPhoto) => {
+        const [user, info] = await Promise.all([
+          this.getUser(photo.owner),
+          this.getInfoForPhoto(photo)
+        ]);
+        return { ...photo, user, info };
       })
     );
-    return { ...photoPack, photo: photoData };
+    return { ...photoPack, photo: processedPhotos };
   };
+
   public getUser = async (userId: string) => {
     if (this.userCache[userId]) {
       return this.userCache[userId];
@@ -40,15 +45,15 @@ class Api {
       .get(url)
       .query(query)
       .then((jsonResponse: superagent.Response) => {
-        const { username, realname, location } = jsonResponse.body;
         console.log(jsonResponse.body);
-        this.userCache[userId] = { username, realname, location };
-        return { username, realname, location };
+        this.userCache[userId] = jsonResponse.body;
+        return jsonResponse.body;
       })
       .catch((err: superagent.ResponseError) => {
         console.error(err);
       });
   };
+
   public getInfoForPhoto = async (photoData: IFlickrPhoto) => {
     const { ajax, url } = this;
     const query: any = this.makeQuery({
@@ -60,17 +65,17 @@ class Api {
       .get(url)
       .query(query)
       .then((jsonResponse: superagent.Response) => {
-        console.log(jsonResponse);
+        console.log(jsonResponse.body);
         return {
           ...photoData,
-          tagData: jsonResponse.body.tags,
-          taken: jsonResponse.body.taken
+          ...jsonResponse.body
         };
       })
       .catch((err: superagent.ResponseError) => {
         console.error(err);
       });
   };
+
   public getPhotos = async (
     searchTerm: string,
     searchType: string,
@@ -103,6 +108,20 @@ class Api {
         console.error("Error in Api.getPhotos: ", err);
       });
   };
+
+  public getAndProcessPhotos = async (
+    searchTerm: string,
+    searchType: string,
+    pageNumber: number = 1
+  ) => {
+    const output = await this.getPhotos(searchTerm, searchType, pageNumber)
+      .then((flickrPack: IFlickrPack) => this.processPack(flickrPack))
+      .catch((err: any) => {
+        console.error(err);
+      });
+    return output;
+  };
+
   private makeQuery = (rest: any) => ({
     api_key: this.key,
     format: "json",

@@ -34,12 +34,12 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
         : photos.pageNumber + 1;
 
     return api
-      .getPhotos(searchTerm, searchType, nextPageNumber)
-      .then((photoPack: IFlickrPack) =>
-        dispatch(loadPhotosIntoStore(photoPack))
-      )
+      .getAndProcessPhotos(searchTerm, searchType, nextPageNumber)
+      .then((response: any) => {
+        return dispatch(loadPhotosIntoStore(response))
+      })
       .then(resolve)
-      .catch(err => {
+      .catch((err: any) => {
         console.error("Error in actions.getPhotos():", err);
         reject(err);
       });
