@@ -22,7 +22,7 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
   new Promise((resolve, reject) => {
     dispatch(setLoading(true));
     const state = getState();
-    const {photos} = state;
+    const { photos } = state;
     const isAtEnd: boolean = photos.pages === photos.pageNumber;
     if (isAtEnd) {
       resolve();
@@ -35,9 +35,9 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
 
     return api
       .getPhotos(searchTerm, searchType, nextPageNumber)
-      .then((photoPack: IFlickrPack) => {
-        return dispatch(loadPhotosIntoStore(photoPack));
-      })
+      .then((photoPack: IFlickrPack) =>
+        dispatch(loadPhotosIntoStore(photoPack))
+      )
       .then(resolve)
       .catch(err => {
         console.error("Error in actions.getPhotos():", err);

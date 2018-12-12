@@ -18,7 +18,12 @@ export const createActionTypes = (
 };
 
 const actionTypes = {
-  photos: createActionTypes("photos", "LOAD_PHOTOS", "SET_LOADING", "QUEUE_NEXT")
+  photos: createActionTypes(
+    "photos",
+    "LOAD_PHOTOS",
+    "SET_LOADING",
+    "QUEUE_NEXT"
+  )
 };
 
 export default actionTypes;

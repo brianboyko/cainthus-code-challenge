@@ -38,6 +38,7 @@ export const photos = (
       }
       return {
         ...state,
+        pageNumber,
         photo: state.photo.concat(photo)
       };
 

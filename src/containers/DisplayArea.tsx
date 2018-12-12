@@ -3,6 +3,10 @@ import { debounce } from "lodash";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 import { getPhotos } from "../store/actions/photos";
+import uuidv4 from "uuid/v4";
+
+import ImageGroup from "../components/DisplayGrid/ImageGroup";
+import { IFlickrPhoto } from "../types";
 
 class DisplayArea extends React.Component<any> {
   public componentDidMount() {
@@ -20,7 +24,9 @@ class DisplayArea extends React.Component<any> {
   public render() {
     return (
       <div>
-        <pre>{JSON.stringify(this.props, null, 2)}</pre>
+        {this.props.photo.map((photo: IFlickrPhoto) => (
+          <ImageGroup key={`${uuidv4()}`} image={photo} />
+        ))}
       </div>
     );
   }
@@ -28,10 +34,10 @@ class DisplayArea extends React.Component<any> {
   private onScroll = () => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-      this.props.photo.length
+      this.props.photo.length &&
+      !this.props.loading
     ) {
       const { searchTerm, searchType } = this.props;
-      console.log({ searchTerm, searchType });
       this.props.actions.getPhotosOnScroll(searchTerm, searchType);
     }
   };

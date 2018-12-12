@@ -13,6 +13,7 @@ const initialPhotosState: any = {
   pages: null
 };
 
+
 describe("./src/store/actions/photos.ts", () => {
   describe("setLoading", () => {
     it("changes the loading setting", () => {

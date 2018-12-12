@@ -78,6 +78,7 @@
     "@types/react-svg": "^5.0.0",
     "@types/redux-logger": "^3.0.6",
     "@types/superagent": "^3.8.4",
+    "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.21",
     "babel-generator": "^6.26.1",
     "enzyme": "^3.7.0",

@@ -18,6 +18,15 @@ const fakePhoto2 = {
   ...fakePhoto,
   id: "whatever"
 };
+const fakePhoto3 = {
+  ...fakePhoto,
+  id: "whatever3"
+};
+const fakePhoto4 = {
+  ...fakePhoto,
+  id: "whatever4"
+};
+
 export const fakeFlickrPack = {
   searchType: "tags",
   searchTerm: "puppies",
@@ -27,6 +36,7 @@ export const fakeFlickrPack = {
   photo: [fakePhoto, fakePhoto2],
   stat: "ok"
 };
+
 
 describe("./src/store/reducers/photos.ts", () => {
   describe("photos", () => {
@@ -54,16 +64,21 @@ describe("./src/store/reducers/photos.ts", () => {
       });
       const second = photos(
         first,
-        photoActions.loadPhotosIntoStore({ ...fakeFlickrPack, pageNumber: 2 })
+        photoActions.loadPhotosIntoStore({
+          ...fakeFlickrPack,
+          photo: [fakePhoto3, fakePhoto4],
+          pageNumber: 2
+        })
       );
       expect(second).toEqual({
         searchType: "tags",
         searchTerm: "puppies",
-        photo: [fakePhoto, fakePhoto2, fakePhoto, fakePhoto2],
-        pageNumber: 1,
+        photo: [fakePhoto, fakePhoto2, fakePhoto3, fakePhoto4],
+        pageNumber: 2,
         perPage: 20,
         pages: 9127
       });
+
       const third = photos(
         second,
         photoActions.loadPhotosIntoStore({
@@ -98,6 +113,7 @@ describe("./src/store/reducers/photos.ts", () => {
         pages: 9127
       });
     });
+    
   });
   describe("loading()", () => {
     it("stores the current search term", () => {

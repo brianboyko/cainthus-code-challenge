@@ -34,9 +34,9 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
   };
 
   private handleGetPhotos = async () => {
-    const {searchTerm, searchType} = this.state;
-    this.props.actions.getInitialPhotos(searchTerm, searchType); 
-    this.setState({searchTerm: ""})
+    const { searchTerm, searchType } = this.state;
+    this.props.actions.getInitialPhotos(searchTerm, searchType);
+    this.setState({ searchTerm: "" });
   };
 }
 
