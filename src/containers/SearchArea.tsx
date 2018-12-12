@@ -16,6 +16,7 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
   public render() {
     const { handleQueryChange, handleGetPhotos, handleChangeSearchType } = this;
     const { searchTerm, searchType } = this.state;
+    const {currentSearchTerm} = this.props;
     return (
       <Header
         handleQueryChange={handleQueryChange}
@@ -23,6 +24,7 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
         handleChangeSearchType={handleChangeSearchType}
         searchTerm={searchTerm}
         searchType={searchType}
+        currentSearchTerm={currentSearchTerm}
       />
     );
   }
@@ -40,6 +42,10 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
   };
 }
 
+const mapStateToProps = (state: any) => ({
+  currentSearchTerm: state.photos.searchTerm ? state.photos.searchTerm : null
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   actions: {
     getInitialPhotos: bindActionCreators(
@@ -51,6 +57,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SearchArea);

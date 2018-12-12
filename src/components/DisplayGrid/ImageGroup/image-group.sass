@@ -1,0 +1,74 @@
+.image-group
+  width: 100%
+  padding: 4px
+  border-radius: 20px
+  margin-bottom: 20px
+  box-sizing: border-box
+  background-color: #CCC
+  margin-top: 20px
+  &__anchor
+    text-decoration: none
+  &__image
+    box-sizing: border-box
+    width: 100%
+    cursor: pointer
+    border-radius: 20px
+    padding: 0
+    margin: 0
+    box-shadow: 0px 5px 15px 0px rgba(255, 255, 255, 0) // transparent for spacing 
+    &:hover
+      box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.75)
+  &__data
+    & .title
+      font-size: 15px
+      margin: 10px 0px 5px 0px
+      font-weight: 700
+      text-align: center
+    & .title__link
+      text-decoration: none
+      color: #ff33cc
+      &:hover 
+        text-decoration: underline
+    & .names-and-date
+      display: flex
+      justify-content: space-around
+      flex-wrap: wrap-reverse
+      align-items: center
+    & .taken-at
+      font-size: 14px
+      margin: 5px 0px 5px 0px
+    & .names
+      font-size: 14px
+      margin: 5px 0px 5px 0px
+      & .names__link
+        text-decoration: none
+        color: #ff33cc
+        &:hover
+          text-decoration: underline
+
+    & .tags
+      margin: 10px 5px 10px 5px
+      display: flex
+      flex-wrap: wrap
+      flex-direction: row
+      justify-content: flex-start
+      & .tag__link
+        text-decoration: none
+        cursor: pointer
+      & .tag
+        cursor: pointer
+        margin: 5px
+        padding: 5px 10px
+        border-radius: 10px
+        background-color: #ff33cc
+        color: #FFFFFF
+        border: 1px solid transparent
+        &:hover
+          background-color: transparent
+          border: 1px solid #ff33cc
+          color: #333
+
+
+
+
+

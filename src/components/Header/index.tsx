@@ -5,7 +5,12 @@ import "./header.sass";
 
 class Header extends React.Component<any> {
   public render() {
-    const { handleQueryChange, handleGetPhotos, searchTerm } = this.props;
+    const {
+      handleQueryChange,
+      handleGetPhotos,
+      searchTerm,
+      currentSearchTerm
+    } = this.props;
     const { handleKeyPress } = this;
 
     return (
@@ -28,6 +33,7 @@ class Header extends React.Component<any> {
             Search
           </button>
         </div>
+        {currentSearchTerm ? <div>Showing: {currentSearchTerm}</div> : null}
       </div>
     );
   }
