@@ -9,7 +9,6 @@ const defaultApiValues: IApiValues = {
 class Api {
   private url: string;
   private key: string;
-  private userCache: any = {};
   constructor(
     { url, key }: IApiValues = defaultApiValues,
     private ajax = superagent // useful if we ever need to mock the entire superagent library
@@ -22,36 +21,16 @@ class Api {
     const photos: IFlickrPhoto[] = photoPack.photo;
     const processedPhotos = await Promise.all(
       photos.map(async (photo: IFlickrPhoto) => {
-        const [user, info] = await Promise.all([
-          this.getUser(photo.owner),
-          this.getInfoForPhoto(photo)
-        ]);
-        return { ...photo, user, info };
+        const info = await this.getInfoForPhoto(photo);
+        return {
+          ...photo,
+          ...info,
+          profileUrl: `https://www.flickr.com/people/${photo.owner}/`,
+          photoUrl: `https://www.flickr.com/photos/${photo.owner}/${photo.id}`
+        };
       })
     );
     return { ...photoPack, photo: processedPhotos };
-  };
-
-  public getUser = async (userId: string) => {
-    if (this.userCache[userId]) {
-      return this.userCache[userId];
-    }
-    const { ajax, url } = this;
-    const query: any = this.makeQuery({
-      method: "flickr.people.getInfo",
-      user_id: userId
-    });
-    return await ajax
-      .get(url)
-      .query(query)
-      .then((jsonResponse: superagent.Response) => {
-        console.log(jsonResponse.body);
-        this.userCache[userId] = jsonResponse.body;
-        return jsonResponse.body;
-      })
-      .catch((err: superagent.ResponseError) => {
-        console.error(err);
-      });
   };
 
   public getInfoForPhoto = async (photoData: IFlickrPhoto) => {
@@ -65,10 +44,17 @@ class Api {
       .get(url)
       .query(query)
       .then((jsonResponse: superagent.Response) => {
-        console.log(jsonResponse.body);
+        const { photo } = jsonResponse.body;
+        const { taken } = photo.dates;
+        const description = photo.description._content;
+        const tags = photo.tags.tag.map((tag: any) => tag._content);
+        const { username, realname } = photo.owner;
         return {
-          ...photoData,
-          ...jsonResponse.body
+          taken,
+          description,
+          tags,
+          username,
+          realname
         };
       })
       .catch((err: superagent.ResponseError) => {
