@@ -14,31 +14,29 @@ export class SearchArea extends React.Component<any, ISearchAreaState> {
     this.state = { searchTerm: "", searchType: "tags" };
   }
   public render() {
-    const { handleQueryChange, handleGetPhotos, handleChangeSearchType } = this;
+    const { handleQueryChange, handleGetPhotos } = this;
     const { searchTerm, searchType } = this.state;
-    const {currentSearchTerm} = this.props;
+    const { currentSearchTerm } = this.props;
     return (
       <Header
         handleQueryChange={handleQueryChange}
         handleGetPhotos={handleGetPhotos}
-        handleChangeSearchType={handleChangeSearchType}
         searchTerm={searchTerm}
         searchType={searchType}
         currentSearchTerm={currentSearchTerm}
       />
     );
   }
-  private handleChangeSearchType = (event: any) => {
-    this.setState({ searchType: event.target.value });
-  };
   private handleQueryChange = (event: any) => {
     this.setState({ searchTerm: event.target.value });
   };
 
   private handleGetPhotos = async () => {
     const { searchTerm, searchType } = this.state;
-    this.props.actions.getInitialPhotos(searchTerm, searchType);
-    this.setState({ searchTerm: "" });
+    if (searchTerm && searchTerm.length) {
+      this.props.actions.getInitialPhotos(searchTerm, searchType);
+      this.setState({ searchTerm: "" });
+    }
   };
 }
 

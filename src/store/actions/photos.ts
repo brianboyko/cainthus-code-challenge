@@ -36,6 +36,9 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
     return api
       .getAndProcessPhotos(searchTerm, searchType, nextPageNumber)
       .then((response: any) => {
+        if(response === null){
+          dispatch(setLoading(false));
+        }
         return dispatch(loadPhotosIntoStore(response))
       })
       .then(resolve)

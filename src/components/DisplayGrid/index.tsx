@@ -1,10 +1,10 @@
 import * as React from "react";
 import ImageGroup from "./ImageGroup";
+import LoadingOverlay from './LoadingOverlay';
 import * as uuid from "uuid";
 import { IFlickrPhoto } from "../../types";
 import * as Aphrodite from "aphrodite";
 import './display-grid.sass';
-
 const { StyleSheet, css } = Aphrodite;
 
 const dynamicallyCreateGridAtRuntime = (numberOfColumns: number) =>
@@ -41,6 +41,7 @@ const DisplayGrid = (props: any) => {
           ))}
         </div>
       ))}
+      {props.loading ? <LoadingOverlay /> : null}
     </div>
   );
 };

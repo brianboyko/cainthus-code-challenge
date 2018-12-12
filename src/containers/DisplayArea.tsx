@@ -1,28 +1,53 @@
 import * as React from "react";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 import { getPhotos } from "../store/actions/photos";
-import DisplayGrid from '../components/DisplayGrid';
+import DisplayGrid from "../components/DisplayGrid";
 
+const KEY_RESOLUTION_WIDTH = 1400;
+
+interface IDisplayAreaState {
+  width: number;
+}
 
 class DisplayArea extends React.Component<any> {
+  public state: IDisplayAreaState = {
+    width: window.innerWidth
+  };
+  private events: any;
+
   public componentDidMount() {
-    window.addEventListener(
-      "scroll",
-      debounce(this.onScroll, 500, { leading: true }),
-      false
-    );
+    this.createEvents();
+    this.onResize();
+    window.addEventListener("scroll", this.events.onScroll, false);
+    window.addEventListener("resize", this.events.onResize, false);
   }
 
   public componentWillUnmount() {
-    window.removeEventListener("scroll", this.onScroll, false);
+    window.removeEventListener("scroll", this.events.onScroll, false);
+    window.removeEventListener("resize", this.events.onResize, false);
   }
 
   public render() {
-    return <DisplayGrid {...this.props} />;
+    return (
+      <DisplayGrid {...this.props} numberOfColumns={this.countColumns()} />
+    );
   }
-
+  private countColumns = () => {
+    const { width } = this.state;
+    if (width > KEY_RESOLUTION_WIDTH) {
+      return 5;
+    }
+    return Math.max(1, Math.floor(width / (KEY_RESOLUTION_WIDTH / 5)));
+  };
+  private createEvents = () => {
+    this.events = {
+      onScroll: debounce(this.onScroll, 500, { leading: true }),
+      onResize: throttle(this.onResize, 500, { leading: false })
+    };
+    return this.events;
+  };
   private onScroll = () => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
@@ -32,6 +57,9 @@ class DisplayArea extends React.Component<any> {
       const { searchTerm, searchType } = this.props;
       this.props.actions.getPhotosOnScroll(searchTerm, searchType);
     }
+  };
+  private onResize = () => {
+    this.setState({ width: window.innerWidth });
   };
 }
 

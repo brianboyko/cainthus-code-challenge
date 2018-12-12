@@ -12,6 +12,7 @@ class Header extends React.Component<any> {
       currentSearchTerm
     } = this.props;
     const { handleKeyPress } = this;
+    const disable = !searchTerm || searchTerm.length === 0;
 
     return (
       <div className="header">
@@ -28,12 +29,16 @@ class Header extends React.Component<any> {
           />
           <button
             onClick={handleGetPhotos}
-            className="header__search-form__button"
+            className={`header__search-form__button${
+              disable ? " disabled" : ""
+            }`}
           >
             Search
           </button>
         </div>
-        {currentSearchTerm ? <div>Showing: {currentSearchTerm}</div> : null}
+        {currentSearchTerm ? (
+          <div className="header__current-search">{currentSearchTerm}</div>
+        ) : null}
       </div>
     );
   }
