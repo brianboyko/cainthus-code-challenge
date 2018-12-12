@@ -10,7 +10,6 @@ const KEY_RESOLUTION_WIDTH = 1400;
 interface IDisplayAreaState {
   width: number;
 }
-
 class DisplayArea extends React.Component<any> {
   public state: IDisplayAreaState = {
     width: window.innerWidth

@@ -49,3 +49,13 @@ export interface IPhotosState {
   perPage: number;
   pages: number | null;
 }
+
+export interface IImageData {
+  realname?: string;
+  username?: string;
+  title?: string;
+  taken?: string;
+  tags?: string[];
+  photoHref: string;
+  profileHref: string;
+}

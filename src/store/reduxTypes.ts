@@ -22,7 +22,6 @@ const actionTypes = {
     "photos",
     "LOAD_PHOTOS",
     "SET_LOADING",
-    "QUEUE_NEXT"
   )
 };
 
