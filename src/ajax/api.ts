@@ -25,8 +25,6 @@ class Api {
         return {
           ...photo,
           ...info,
-          profileUrl: `https://www.flickr.com/people/${photo.owner}/`,
-          photoUrl: `https://www.flickr.com/photos/${photo.owner}/${photo.id}`
         };
       })
     );

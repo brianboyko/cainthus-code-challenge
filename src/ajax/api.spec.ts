@@ -35,8 +35,6 @@ describe("./src/ajax/api.ts", () => {
         "tags",
         "username",
         "realname",
-        "profileUrl",
-        "photoUrl"
       ]
       expect(
         puppies.photo!.every((photo: any) => {
