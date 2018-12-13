@@ -44,6 +44,7 @@ export const getPhotos = (searchTerm: string, searchType: string = "tags") => (
       .then(resolve)
       .catch((err: any) => {
         console.error("Error in actions.getPhotos():", err);
+        dispatch(setLoading(false));
         reject(err);
       });
   });

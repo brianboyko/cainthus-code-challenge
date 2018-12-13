@@ -22,7 +22,8 @@ const fakeImage = {
 };
 
 const { shallow } = Enzyme;
-describe("Carousel Holder", () => {
+
+describe("ImageGroup", () => {
   it("renders", async () => {
     expect( shallow(<ImageGroup image={fakeImage} />).html()).toBe(snapshot);
   });
