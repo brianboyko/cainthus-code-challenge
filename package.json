@@ -85,6 +85,7 @@
     "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.21",
     "babel-generator": "^6.26.1",
+    "dotenv-webpack": "^1.5.7",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.7.1",
     "jest-enzyme": "^7.0.1",
