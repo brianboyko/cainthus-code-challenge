@@ -43,7 +43,6 @@ describe("./src/ajax/api.ts", () => {
             if(photoKeys.has(key)){
               return true;
             }
-            console.log({key, photo})
             return false;
           })
         })
