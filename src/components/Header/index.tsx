@@ -19,7 +19,7 @@ class Header extends React.Component<any> {
         <div className="logo">
           <ReactSVG svgClassName="logo__svg" src={photoSrc} />
         </div>
-        <div className="logo-type">SapientPhoto</div>
+        <div className="logo-type">CainthusPhoto</div>
         <div className="header__search-form">
           <input
             onChange={handleQueryChange}
